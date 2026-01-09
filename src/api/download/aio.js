@@ -1,0 +1,61 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+async function aiopro(url) {
+    try {
+        if (!url.includes('https://')) throw new Error('Invalid url.');
+        
+        const { data: h } = await axios.get('https://allinonedownloader.pro/');
+        const $ = cheerio.load(h);
+        
+        const token = $('input[name="token"]').attr('value');
+        if (!token) throw new Error('Token not found.');
+        
+        const { data } = await axios.post('https://allinonedownloader.pro/wp-json/aio-dl/video-data/', new URLSearchParams({
+            url: url,
+            token: token
+        }).toString(), {
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                origin: 'https://allinonedownloader.pro',
+                referer: 'https://allinonedownloader.pro/',
+                'user-agent': 'Mozilla/5.0 (Linux; Android 15; SM-F958 Build/AP3A.240905.015) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.6723.86 Mobile Safari/537.36'
+            }
+        });
+        
+        return data;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+module.exports = function(app) {
+    app.get("/download/aio", async (req, res) => {
+        const { url } = req.query;
+        
+        if (!url) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'url' wajib diisi."
+            });
+        }
+
+        try {
+            const result = await aiopro(url);
+            
+            return res.json({
+                status: true,
+                creator: "aerixxx",
+                result: result
+            });
+            
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Gagal mendownload video"
+            });
+        }
+    });
+};

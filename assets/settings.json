@@ -1,0 +1,1169 @@
+{
+  "name": "Xerumi",
+  "version": "v2.0",
+  "description": "Straightforward tools API with predictable behavior.",
+  "bannerImage": "https://g.top4top.io/p_3661348s90.gif",
+  "header": {
+    "status": "Online!"
+  },
+  "apiSettings": {
+    "creator": "aerixxx",
+    "apikey": [
+      "xerumi-api"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Artificial intelligence",
+      "items": [
+        {
+          "name": "Xerumi Ai",
+          "desc": "Chat With Ai assisten Model Xerumi",
+          "path": "/ai/xerumi?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI"
+          }
+        },
+        {
+          "name": "Magic Studio Text To Image",
+          "desc": "Magic Studio",
+          "path": "/ai/magicstudio?prompt=",
+          "status": "ready",
+          "params": {
+            "prompt": "Cat wearing glass"
+          }
+        },
+        {
+          "name": "bard ai",
+          "desc": "chat with Bard ai",
+          "path": "/ai/bard?query=",
+          "status": "ready",
+          "params": {
+            "query": "Teks atau perintah untuk chat AI"
+          }
+        },
+        {
+          "name": "Gita Gpt",
+          "desc": "chat with gita gpt",
+          "path": "/ai/gita?q=",
+          "status": "ready",
+          "params": {
+            "q": "Teks atau perintah untuk chat AI"
+          }
+        },
+        {
+          "name": "gpt3",
+          "desc": "chat with gpt",
+          "path": "/ai/gpt3?prompt=&content=",
+          "status": "ready",
+          "params": {
+            "prompt": "Teks atau perintah untuk chat AI",
+            "content": "conten untuk ai"
+          }
+        },
+{
+  "name": "Llama 3.3 AI",
+  "desc": "Chat with Llama 3.3 AI model",
+  "path": "/ai/llama33?prompt=&text=",
+  "status": "ready",
+  "params": {
+    "prompt": "System prompt untuk AI",
+    "text": "Pesan user untuk AI"
+  }
+},
+{
+  "name": "Meta AI",
+  "desc": "Chat with Meta AI",
+  "path": "/ai/metaai?query=",
+  "status": "ready",
+  "params": {
+    "query": "Pesan untuk Meta AI"
+  }
+},
+{
+  "name": "Muslim AI",
+  "desc": "Get Islamic knowledge answers from Muslim AI",
+  "path": "/ai/muslimai?query=",
+  "status": "ready",
+  "params": {
+    "query": "Pertanyaan tentang Islam"
+  }
+},
+{
+  "name": "PowerBrain AI",
+  "desc": "Chat with PowerBrain AI",
+  "path": "/ai/powerbrainai?query=",
+  "status": "ready",
+  "params": {
+    "query": "Pesan untuk PowerBrain AI"
+  }
+},
+        {
+          "name": "felo ai",
+          "desc": "chat with felo ai",
+          "path": "/ai/felo?quey=",
+          "status": "ready",
+          "params": {
+            "query": "Teks atau perintah untuk chat AI"
+          }
+        },
+        {
+    "name": "gemini ai [BETA]",
+    "desc": "Advanced Gemini AI with Image/File Support (Requires Cookie)",
+    "path": "/ai/gemini",
+    "status": "ready",
+    "params": {
+      "text": "Pertanyaan atau perintah",
+      "cookie": "Google Gemini __Secure-1PSID Cookie",
+      "imageUrl": "https://",
+      "promptSystem": "youre helpfull ai"
+    }
+  },
+  {
+  "name": "gemini lite",
+  "desc": "Gemini 2.0 Flash Lite (No Cookie Needed, Support Image)",
+  "path": "/ai/gemini-lite",
+  "status": "ready",
+  "params": {
+    "prompt": {
+    "desc": "Teks perintah",
+    "required": true
+    },
+    "imgUrl": {
+    "desc": "URL Gambar untuk dianalisis (Optional)",
+    "required": false
+    },
+    "model": {
+    "desc": "gemini-2.0-flash-lite (Optional)",
+    "required": false
+    }
+  }
+},
+        {
+          "name": "dolphin Ai",
+          "desc": "Dolphin Ai",
+          "path": "/ai/dolphinai?text&template=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI",
+            "template": "logical, creative, summarize, code-beginner, code-advanced"
+          }
+        },
+        {
+          "name": "cici(dola)",
+          "desc": "Dola (cici)",
+          "path": "/ai/ciciai?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI"
+          }
+        },
+        {
+          "name": "Microsoft Copilot",
+          "desc": "Chat with Microsoft Copilot AI",
+          "path": "/ai/copilot?text=&model=",
+          "status": "ready",
+          "params": {
+            "text": {
+              "desc": "Teks atau perintah untuk chat AI",
+              "required": true
+            },
+            "model": {
+              "desc": "Model AI. Pilihan: default, think-deeper, gpt-5",
+              "required": false
+            }
+          }
+        },
+        {
+          "name": "claude ai",
+          "desc": "chat with claude ai",
+          "path": "/ai/claude?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI claude"
+          }
+        },
+        {
+          "name": "webpilot ai",
+          "desc": "chat with webpilot ai",
+          "path": "/ai/webpilot?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI webpilot"
+          }
+        },
+        {
+          "name": "unlimited ai",
+          "desc": "chat with unlimited ai",
+          "path": "/ai/unlimitedai?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat unlimited ai"
+          }
+        },
+        {
+          "name": "turboseek ai",
+          "desc": "chat with turboseek ai",
+          "path": "/ai/turboseek?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat turboseek ai"
+          }
+        },
+        {
+          "name": "perplexity ai",
+          "desc": "chat with perplexity ai",
+          "path": "/ai/perplexity?text=",
+          "status": "ready",
+          "params": {
+            "text": "Teks atau perintah untuk chat AI",
+            "web": "Search web (true/false)",
+            "academic": "Search academic (true/false)",
+            "social": "Search social media (true/false)",
+            "finance": "Search finance (true/false)"
+          }
+        },
+        {
+          "name": "DeepImg AI",
+          "desc": "Generate AI images using DeepImg",
+          "path": "/ai/deepimg?prompt=&size=&style=",
+          "status": "ready",
+          "params": {
+            "prompt": "Deskripsi gambar yang ingin di-generate (wajib)",
+            "size": "Pilihan: 1:1, 3:2, 2:3",
+            "style": "ghibli, cyberpunk, anime, portrait, chibi, pixel art, oil painting, 3d"
+          },
+          "response_type": "image/png",
+          "note": "Endpoint ini mengembalikan gambar PNG langsung, bukan JSON"
+        },
+        {
+          "name": "Remaker AI",
+          "desc": "Generate AI anime images using Remaker AI",
+          "path": "/ai/remakerai?prompt=&rasio=&style=",
+          "status": "ready",
+          "params": {
+            "prompt": "Deskripsi gambar anime yang ingin di-generate (wajib)",
+            "rasio": "1:1, 2:3, 9:16, 3:2, 16:9",
+            "style": "Pilihan: ghibli1, ghibli2, ghibli3, anime"
+          },
+          "response_type": "image/png",
+          "note": "1. Endpoint ini mengembalikan gambar PNG langsung, bukan JSON. 2. Proses generate bisa memakan waktu hingga 40 detik. 3. Membutuhkan file ua.txt.",
+          "example_usage": {
+            "url": "/ai/remakerai?prompt=cute anime girl with cat ears&rasio=9:16&style=ghibli1",
+            "description": "Gambar anime girl dengan rasio vertikal dan style Ghibli"
+          }
+        }
+      ]
+    },
+    {
+      "name": "NSFW",
+      "items": [
+      {
+          "name": "NSFW Image",
+          "desc": "Menampilkan gambar anime acak yang tidak aman (NSFW).",
+          "path": "/random/nsfw",
+          "cost": 20,
+          "status": "ready"
+        },
+        {
+          "name": "Remove Clothes",
+          "desc": "Edit Image (nude).",
+          "path": "/random/remove-clothes",
+          "status": "ready",
+          "cost": 50,
+          "params": {
+            "url": "https:"
+          }
+        },
+        {
+          "name": "DEEPNUDE",
+          "desc": "IYKYK",
+          "path": "/random/deepnude?url=",
+          "status": "ready",
+          "cost": 50,
+          "params": {
+            "url": "https://catbox.moe/qhhajia.png"
+          }
+        }       
+      ]
+    },
+    {
+      "name": "Anime",
+      "items": [
+        {
+          "name": "Berita Anime",
+          "desc": "Menarik daftar berita anime terbaru dari MyAnimeList.",
+          "path": "/anime/beritaanime?id=",
+          "status": "ready",
+          "params": {
+            "id": "ID berita yang didapat dari endpoint 'Berita Anime'."
+          }
+        },
+        {
+          "name": "Detail Berita Anime",
+          "desc": "Mengambil konten lengkap dari sebuah berita anime berdasarkan ID-nya.",
+          "path": "/anime/berita",
+          "status": "ready"
+        },
+        {
+          "name": "Jadwal Rilis Anime",
+          "desc": "Menampilkan jadwal rilis anime mingguan dari LiveChart.me.",
+          "path": "/anime/jadwalrilis",
+          "status": "ready"
+        },
+        {
+          "name": "Update Anime Terbaru",
+          "desc": "Menampilkan daftar anime dengan episode yang baru saja di-update di AnimeDao.",
+          "path": "/anime/latest",
+          "status": "ready"
+        },
+        {
+          "name": "Anime Populer",
+          "desc": "Menampilkan daftar anime yang sedang populer (hot) di AnimeDao.",
+          "path": "/anime/hot",
+          "status": "ready"
+        },
+        {
+          "name": "Cari Anime",
+          "desc": "Melakukan pencarian anime berdasarkan judul di database AnimeDao.",
+          "path": "/anime/search?q=",
+          "status": "ready",
+          "params": {
+            "q": "Judul anime yang ingin Anda cari."
+          }
+        },
+        {
+          "name": "Detail Anime",
+          "desc": "Menampilkan informasi mendetail dari sebuah anime berdasarkan URL halamannya di AnimeDao.",
+          "path": "/anime/detail?url=",
+          "status": "ready",
+          "params": {
+            "url": "Contoh: 'https://animedao.lv/anime/some-anime-title/'"
+          }
+        },
+        {
+          "name": "AlqAnime Hangat",
+          "desc": "Daftar anime yang sedang hangat di AlqAnime.",
+          "path": "/anime/alqanime/hangat",
+          "status": "ready"
+        },
+        {
+          "name": "AlqAnime Rilisan",
+          "desc": "Rilisan terbaru dari AlqAnime.",
+          "path": "/anime/alqanime/rilisan",
+          "status": "ready"
+        },
+        {
+          "name": "AlqAnime Selesai",
+          "desc": "Anime yang telah selesai tayang di AlqAnime.",
+          "path": "/anime/alqanime/selesai",
+          "status": "ready"
+        },
+        {
+          "name": "AlqAnime Movie",
+          "desc": "Kumpulan film anime dari AlqAnime.",
+          "path": "/anime/alqanime/movie",
+          "status": "ready"
+        },
+        {
+          "name": "AlqAnime Populer",
+          "desc": "Anime terpopuler di AlqAnime.",
+          "path": "/anime/alqanime/populer",
+          "status": "ready"
+        },
+        {
+          "name": "AlqAnime Ongoing",
+          "desc": "Daftar anime ongoing di AlqAnime.",
+          "path": "/anime/alqanime/ongoing",
+          "status": "ready"
+        },
+        {
+          "name": "AlqAnime Search",
+          "desc": "Mencari anime di AlqAnime.",
+          "path": "/anime/alqanime/search?q=",
+          "status": "ready",
+          "params": {
+            "q": "Judul anime yang dicari."
+          }
+        },
+        {
+          "name": "AlqAnime Detail",
+          "desc": "Detail anime dari AlqAnime.",
+          "path": "/anime/alqanime/detail?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL detail anime AlqAnime."
+          }
+        },
+        {
+          "name": "AlqAnime Download",
+          "desc": "Link download anime dari AlqAnime.",
+          "path": "/anime/alqanime/download?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL halaman download."
+          }
+        },
+        {
+          "name": "Doujin Search",
+          "desc": "Mencari doujin di Maid.my.id.",
+          "path": "/anime/doujin/search?q=",
+          "status": "ready",
+          "params": {
+            "q": "Kata kunci pencarian."
+          }
+        },
+        {
+          "name": "Doujin Detail",
+          "desc": "Melihat detail doujin.",
+          "path": "/anime/doujin/detail?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL detail doujin."
+          }
+        },
+        {
+          "name": "Doujin Chapter",
+          "desc": "Mengambil gambar dari sebuah chapter doujin.",
+          "path": "/anime/doujin/chapter?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL chapter doujin."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile Info",
+      "items": [
+       {
+          "name": "Roblox Profile Info",
+          "desc": "fetching roblox profile.",
+          "path": "/stalk/roblox?user=",
+          "cost": 10,
+          "status": "ready",
+          "params": {
+            "user": "ilhamganteng."
+          }
+        },
+        {
+          "name": "github Profile Info",
+          "desc": "fetching github profile.",
+          "path": "/stalk/github?username=",
+          "status": "ready",
+          "params": {
+            "username": "ilhamganteng."
+          }
+        },
+        {
+          "name": "Instagram Profile Info",
+          "desc": "fetching Instagram profile.",
+          "path": "/stalk/ig?username=",
+          "cost": 10,          
+          "status": "ready",
+          "params": {
+            "username": "@ilhammworst."
+          }
+        },
+        {
+          "name": "Instagram Profile Info",
+          "desc": "Instagram profile info",
+          "path": "/stalk/ig2?username=",
+          "cost": 10,                 
+          "status": "ready",
+          "params": {
+            "username": "@ilhammworst."
+          }
+        },
+        {
+          "name": "Tiktok Profile Info",
+          "desc": "fetching Tiktok profile.",
+          "path": "/stalk/tiktok?username=",
+          "cost": 10,          
+          "status": "ready",
+          "params": {
+            "username": "@ilhammworst."
+          }
+        },
+        {
+          "name": "Tiktok Profile Info 2",
+          "desc": "fetching Tiktok profile.",
+          "path": "/stalk/tiktok2?username=",
+          "cost": 10,          
+          "status": "ready",
+          "params": {
+            "username": "@ilhammworst."
+          }
+        },
+        {
+          "name": "Twitter Profile Info",
+          "desc": "fetching Twitter profile.",
+          "path": "/stalk/twitter?username=",
+          "cost": 10,          
+          "status": "ready",
+          "params": {
+            "username": "@ilhammworst."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Downloader",
+      "items": [
+        {
+          "name": "Tiktok Downloader",
+          "desc": "Mengunduh video dari TikTok tanpa watermark.",
+          "path": "/download/tiktok?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video TikTok."
+          }
+        },
+        {
+          "name": "Tiktok 2 Downloader",
+          "desc": "Mengunduh video dari TikTok tanpa watermark.",
+          "path": "/download/tiktok2?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video TikTok."
+          }
+        },
+        {
+          "name": "Tiktok 3 Downloader",
+          "desc": "Mengunduh video dari TikTok tanpa watermark.",
+          "path": "/download/tiktok3?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video TikTok."
+          }
+        },
+        {
+          "name": "Tiktok 4 Downloader",
+          "desc": "Mengunduh video dari TikTok tanpa watermark.",
+          "path": "/download/tiktok4?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video TikTok."
+          }
+        },
+        {
+          "name": "Instagram Downloader",
+          "desc": "Mengunduh video dari ig",
+          "path": "/download/instagram?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video ."
+          }
+        },
+        {
+          "name": "Instagram Downloader 2",
+          "desc": "Mengunduh video dari ig",
+          "path": "/download/instagram2?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video ."
+          }
+        },
+        {
+          "name": "Instagram Downloader 3",
+          "desc": "Mengunduh video dari ig",
+          "path": "/download/instagram3?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video ."
+          }
+        },
+        {
+          "name": "Instagram story Downloader",
+          "desc": "Mengunduh video dari igs",
+          "path": "/download/igstory?username=",
+          "status": "ready",
+          "params": {
+            "username": "hamzz_jr ."
+          }
+        },
+        {
+          "name": "Twitter ( x ) Downloader",
+          "desc": "Mengunduh video x",
+          "path": "/download/twitter?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxx.com"
+          }
+        },
+        {
+          "name": "Twitter ( x ) Downloader 2",
+          "desc": "Mengunduh video x",
+          "path": "/download/twitter2?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxx.com"
+          }
+        },
+        {
+          "name": "Twitter ( x ) Downloader 3",
+          "desc": "Mengunduh video x",
+          "path": "/download/twitter3?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxx.com"
+          }
+        },
+        {
+          "name": "Twitter ( x ) Downloader 4",
+          "desc": "Mengunduh video x",
+          "path": "/download/twitter4?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxx.com"
+          }
+        },
+        {
+          "name": "Douyin Downloader",
+          "desc": "Mengunduh video dari Douyin (versi China dari TikTok).",
+          "path": "/download/douyin?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video Douyin."
+          }
+        },
+        {
+          "name": "Terabox Downloader",
+          "desc": "Mengunduh video/docs from Terabox",
+          "path": "/download/terabox?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxx."
+          }
+        },
+        {
+          "name": "ALL IN ONE Downloader",
+          "desc": "Mengunduh berbagai video dari platform",
+          "path": "/download/aio?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxxx."
+          }
+        },
+        {
+          "name": "ALL IN ONE 2 Downloader",
+          "desc": "Mengunduh berbagai video dari platform",
+          "path": "/download/aio2?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxxx."
+          }
+        },
+        {
+          "name": "Pinterest Downloader",
+          "desc": "Mengunduh Photo Video From Pinterest",
+          "path": "/download/pinterest?url=",
+          "status": "ready",
+          "params": {
+            "url": "https://xxxxx."
+          }
+        },
+        {
+          "name": "Snackvideo Downloader",
+          "desc": "Mengunduh video dari Snackvideo.",
+          "path": "/download/snackvideo?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video Snackvideo."
+          }
+        },
+        {
+          "name": "Capcut Downloader",
+          "desc": "Mengunduh video dari template Capcut.",
+          "path": "/download/capcut?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL template Capcut."
+          }
+        },
+        {
+          "name": "Videy Downloader",
+          "desc": "Mengunduh video dari situs Videy.co.",
+          "path": "/download/videy?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video Videy."
+          }
+        },
+        {
+          "name": "YouTube Downloader",
+          "desc": "Download video from YouTube",
+          "path": "/download/youtubedown?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL video YouTube"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Random",
+      "items": [
+        {
+          "name": "berita",
+          "desc": "Menampilkan berita",
+          "path": "/berita/merdeka",
+          "status": "ready"
+        },
+        {
+          "name": "berita",
+          "desc": "Menampilkan berita",
+          "path": "/berita/metrotv",
+          "status": "ready"
+        },
+        {
+          "name": "ARTINAMA",
+          "desc": "Primbon Artinama.",
+          "path": "/random/artinama?nama=",
+          "status": "ready",
+          "params": {
+            "nama": "reze"
+          }
+        },
+        {
+          "name": "Al Qur'an",
+          "desc": "Surah.",
+          "path": "/random/alquran",
+          "status": "ready",
+          "params": {
+            "surah": "al fatihah",
+            "ayat": "2"
+          }
+        },
+        {
+          "name": "Viuu Drama",
+          "desc": "Get Random Drama.",
+          "path": "/random/viuu",
+          "status": "ready"
+        },
+        {
+          "name": "kisah nabi",
+          "desc": "cerita kisah nabi.",
+          "path": "/random/kisahnabi",
+          "status": "ready",
+          "params": {
+            "nabi": "adam"
+          }
+        },
+        {
+          "name": "Blue Archive Image",
+          "desc": "Menampilkan gambar acak dari karakter game Blue Archive.",
+          "path": "/random/ba",
+          "status": "ready"
+        },
+        {
+          "name": "Random Image DeviantArt",
+          "desc": "Menampilkan gambar acak.",
+          "path": "/random/devianart?query=",
+          "status": "ready",
+          "params": {
+            "query": "example: reze"
+          }
+        },
+        {
+          "name": "Waifu Image (SFW)",
+          "desc": "Menampilkan gambar waifu acak yang aman (SFW).",
+          "path": "/random/waifu",
+          "status": "ready"
+        },
+        {
+          "name": "random milf",
+          "desc": "Get Random milf.",
+          "path": "/random/milf",
+          "cost": 10,          
+          "status": "ready"
+        },
+        {
+          "name": "RANDOM BOMEP",
+          "desc": "Menampilkan random video dri xnxx",
+          "path": "/random/xnxx",
+          "status": "ready"
+        },
+        {
+          "name": "RANDOM HNETONG",
+          "desc": "Menampilkan random HNTAI",
+          "path": "/random/hentaivid",
+          "status": "ready"
+        },
+        {
+          "name": "Pap Ayang",
+          "desc": "Menampilkan gambar 'PAP Ayang' secara acak.",
+          "path": "/random/papayang",
+          "status": "ready"
+        }
+      ]
+    },
+    {
+      "name": "image create",
+      "items": [
+      {
+          "name": "iphone chat generate",
+          "desc": "generate ss chat wa look iphone.",
+          "path": "/imagecreator/iqc?prompt=",
+          "cost": 40,
+          "status": "ready",
+          "params": {
+             "prompt": "gelooooo aerixxx"
+          }
+        },
+        {
+  "name": "NanoBanana Image Creator",
+  "desc": "Generate image with NanoBanana AI",
+  "path": "/imagecreator/nanobanana?prompt=",
+  "status": "ready",
+  "params": {
+    "prompt": "Deskripsi gambar yang ingin di-generate"
+  }
+},
+        {
+          "name": "Flat AI Image Creator",
+          "desc": "Generate image with Flat AI",
+          "path": "/imagecreator/flataAi?prompt=&style=ghibli-style&aspect_ratio=1:1&seed=",
+          "status": "ready",
+          "cost": 2,
+          "params": {
+            "prompt": "Deskripsi gambar yang ingin di-generate (wajib)",
+            "style": "Style gambar (opsional, default: ghibli-style)",
+            "aspect_ratio": "Aspect ratio (opsional, default: 1:1)",
+            "seed": "Seed untuk random generation (opsional)"
+          },
+          "options": {
+            "style": {
+              "flataipro": "Flat AI Pro",
+              "flatai": "Flat AI Base",
+              "runware_quality": "Standard",
+              "runware_new_quality": "Quality+",
+              "realistic": "Realistic",
+              "photo_skin": "Real Skin",
+              "cinema": "Cinematic",
+              "retro_anime": "Retro Anime",
+              "ghibli-style": "Ghibli Style",
+              "midjourney_art": "Midjourney Art",
+              "fantasy_armor": "Fantasy Armor",
+              "robot_cyborg": "Robot & Cyborg",
+              "disney_princess": "Princess",
+              "amateurp": "Daily Life",
+              "scifi_enviroments": "Sci-Fi Environments",
+              "mythic_fantasy": "Mythic Fantasy",
+              "pixel_art": "Pixel Art",
+              "watercolor_painting": "Watercolor Painting",
+              "diesel_punk": "Diesel Punk",
+              "architectural": "Architectural",
+              "style_1930s": "1930s",
+              "flat_anime": "Flat Anime",
+              "mystical_realms": "Mystical Realms",
+              "ecommerce": "E-Commerce",
+              "cinema_style": "Cinema"
+            },
+            "aspect_ratio": {
+              "1:1": "Square (1:1)",
+              "16:9": "Widescreen (16:9)",
+              "4:3": "Standard (4:3)",
+              "3:2": "Photo (3:2)",
+              "9:16": "Portrait (9:16)"
+            }
+          }
+        }
+      ]
+    },    
+    {
+      "name": "Tools",
+      "items": [
+        {
+          "name": "Text-to-Speech",
+          "desc": "Mengubah teks menjadi suara (TTS) dengan berbagai pilihan suara.",
+          "path": "/tools/text-to-speech?text=",
+          "cost": 10,          
+          "status": "ready",
+          "params": {
+            "text": "Teks yang ingin diubah menjadi suara."
+          }
+        },
+        {
+          "name": "Emoji Mix",
+          "desc": "Menggabungkan dua emoji menjadi satu emoji unik.",
+          "path": "/tools/emojimix?emoji1=&emoji2=",
+          "status": "ready",
+          "params": {
+            "emoji1": "Emoji pertama (contoh: 😂).",
+            "emoji2": "Emoji kedua (contoh: 👍)."
+          }
+        },
+        {
+          "name": "Host Info",
+          "desc": "Mendapatkan informasi detail mengenai sebuah host (IP atau domain).",
+          "path": "/tools/hostinfo?host=",
+          "status": "ready",
+          "params": {
+            "host": "Alamat IP atau nama domain (contoh: google.com)."
+          }
+        },
+        {
+          "name": "NSFW Content Check",
+          "desc": "Mendeteksi apakah sebuah gambar mengandung konten dewasa (NSFW).",
+          "path": "/tools/nsfw-check?url=",
+          "status": "ready",
+          "params": {
+            "url": "URL gambar yang ingin diperiksa."
+          }
+        },
+        {
+          "name": "Web Screenshot 2",
+          "desc": "Take screenshot of website",
+          "path": "/tools/ssweb2?url=&device=",
+          "status": "ready",
+          "params": {
+            "url": "URL website",
+            "device": "desktop, mobile, tablet"
+          }
+        },
+        {
+  "name": "AI Enhancer HD",
+  "desc": "Enhance image quality to HD",
+  "path": "/tools/HD?image=&model=&settings=",
+  "status": "ready",
+  "params": {
+    "image": "URL gambar yang ingin di-enhance",
+    "model": "Model enhancer (default: 3)"
+  }
+},
+        {
+          "name": "Cek Tagihan PLN",
+          "desc": "Check PLN postpaid bill",
+          "path": "/tools/cekpln?id=&phone=?",
+          "cost": 10,          
+          "status": "ready",
+          "tags": [
+            "best",
+            "popular",
+            "new"
+          ],
+          "params": {
+            "id": {
+              "desc": "Customer ID PLN",
+              "required": true
+            },
+            "phone": {
+              "desc": "Nomor HP (opsional)",
+              "required": false
+            }
+          }
+        },
+        {
+          "name": "Cek Kuota Axis/XL",
+          "desc": "Check Axis/XL package quota",
+          "path": "/random/cekkuota?nomor=",
+          "status": "ready",
+          "params": {
+            "nomor": "Nomor HP Axis/XL"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "items": [
+        {
+          "name": "Youtube",
+          "desc": "Melakukan pencarian video di platform YouTube.",
+          "path": "/search/youtube?q=",
+          "status": "ready",
+          "params": {
+            "q": "Kata kunci untuk pencarian video."
+          }
+        },
+        {
+          "name": "Spotify Search",
+          "desc": "Melakukan pencarian lagu berdasarkan judul atau artis di Spotify.",
+          "path": "/search/spotify?query=",
+          "status": "ready",
+          "params": {
+            "query": "Judul lagu atau nama artis."
+          }
+        },
+        {
+          "name": "sticker Search",
+          "desc": "Melakukan pencarian sticker.",
+          "path": "/search/sticker?query=",
+          "status": "ready",
+          "params": {
+            "query": "pocoyo, bahlil."
+          }
+        },
+        {
+          "name": "Anime Search",
+          "desc": "Anime.",
+          "path": "/search/kusonime?query=",
+          "status": "ready",
+          "params": {
+            "query": "naruto, one piece."
+          }
+        },
+        {
+          "name": "pinterest Search",
+          "desc": "Melakukan pencarian image.",
+          "path": "/search/pinterest?query=",
+          "status": "ready",
+          "params": {
+            "query": "bahlil crtt."
+          }
+        },
+        {
+          "name": "jadwal tv ( ID )",
+          "desc": "jadwal tv.",
+          "path": "/search/jadwaltv?channel=",
+          "status": "ready",
+          "params": {
+            "channel": "mnctv, SCTV."
+          }
+        },
+        {
+          "name": "Google Image Search",
+          "desc": "Melakukan pencarian gambar di Google Images.",
+          "path": "/search/gimage?q=",
+          "status": "ready",
+          "params": {
+            "q": "Kata kunci untuk pencarian gambar."
+          }
+        },
+        {
+          "name": "Random Neko",
+          "desc": "Get Random nekopoi.",
+          "path": "/search/nekopoi",
+          "cost": 10,          
+          "status": "ready"
+        },
+        {
+          "name": "Play Store Search",
+          "desc": "Mencari aplikasi di Google Play Store.",
+          "path": "/search/playstore?q=",
+          "status": "ready",
+          "params": {
+            "q": "Nama aplikasi yang ingin dicari."
+          }
+        },
+        {
+          "name": "NPM Package Search",
+          "desc": "Mencari package di Node Package Manager (NPM).",
+          "path": "/search/npm?q=",
+          "status": "ready",
+          "params": {
+            "q": "Nama package NPM yang ingin dicari."
+          }
+        },
+        {
+          "name": "F-Droid Search",
+          "desc": "Mencari aplikasi open-source di F-Droid.",
+          "path": "/search/fdroid?q=",
+          "status": "ready",
+          "params": {
+            "q": "Nama aplikasi yang ingin dicari di F-Droid."
+          }
+        },
+        {
+          "name": "Happymod Search",
+          "desc": "Mencari aplikasi atau game modifikasi di Happymod.",
+          "path": "/search/happymod?q=",
+          "status": "ready",
+          "params": {
+            "q": "Nama aplikasi atau game yang ingin dicari."
+          }
+        },
+        {
+          "name": "Tiktok Search",
+          "desc": "Melakukan pencarian video di TikTok.",
+          "path": "/search/tiktok?q=",
+          "status": "ready",
+          "params": {
+            "q": "Kata kunci untuk pencarian video TikTok."
+          }
+        },
+        {
+          "name": "Tiktok Search 2",
+          "desc": "Melakukan pencarian video di TikTok.",
+          "path": "/search/tiktok2?q=",
+          "status": "ready",
+          "params": {
+            "keyword": "Kata kunci untuk pencarian video TikTok."
+          }
+        },
+        {
+          "name": "XNXX Search",
+          "desc": "Melakukan pencarian video di XNXX.",
+          "path": "/search/xnxx?q=",
+          "cost": 30,          
+          "status": "ready",
+          "params": {
+            "q": "Kata kunci untuk pencarian video XNXX."
+          }
+        },
+        {
+          "name": "Sfile Search",
+          "desc": "Mencari file di layanan hosting Sfile.mobi.",
+          "path": "/search/sfile?q=",
+          "status": "ready",
+          "params": {
+            "q": "Kata kunci untuk pencarian file di Sfile."
+          }
+        }
+      ]
+    },
+    {
+      "name": "UPLOADER",
+      "items": [
+        {
+          "name": "Upload to Catbox",
+          "desc": "Upload file ke Catbox (max 50MB)",
+          "path": "/upload/catbox",
+          "upload": true,
+          "accept": "*/*",
+          "status": "ready"
+        },
+        {
+          "name": "Upload to Top4Top",
+          "desc": "Upload file ke Top4Top (max 200MB)",
+          "path": "/upload/top4top",
+          "upload": true,
+          "accept": "*/*",
+          "status": "ready"
+        }
+      ]
+    },
+    {
+      "name": "API",
+      "items": [
+        {
+          "name": "API Status",
+          "desc": "Memeriksa status layanan API",
+          "path": "/api/status",
+          "status": "ready"
+        },
+        {
+          "name": "Reset Daily Limit",
+          "desc": "Reset limit harian pengguna (Developer only)",
+          "path": "/api/reset-limit",
+          "status": "ready",
+          "params": {
+               "apikey": "please input apikey"
+           }
+        },
+        {
+          "name": "Reset Limit Membandel",
+          "desc": "Reset limit harian pengguna (Developer only)",
+          "path": "/api/admin/reset-client-limit",
+          "status": "ready",
+          "params": {
+               "apikey": "please input apikey"
+           }
+        }
+      ]
+    }
+  ]
+}
+

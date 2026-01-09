@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/src/icon.png" type="image/png">
+    <title id="page"></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Poppins', sans-serif;
+        color: #4B4B4B;
+        padding: 50px 30px;
+        padding-top: 100px;
+        background-color: white;
+        background-image: 
+            linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        min-height: 100vh;
+    }
+    body.no-scroll {
+        overflow: hidden;
+    }
+    .navbar {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 15px 32px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        transition: all 0.3s ease;
+        border-bottom: 1px solid transparent;
+    }
+    .navbar.scrolled {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .navbar-brand {
+        color: #333;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .navbar-brand.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .btn-close:focus {
+        outline: none;
+        box-shadow: none;
+    }
+    .spinner-border.custom-spinner {
+        color: #333;
+    }
+    .modal-content {
+        padding: 10px;
+        border: none;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+    .modal-dialog {
+        margin: 20px;
+        max-width: 100%;
+        max-height: 80vh;
+    }
+    .modal-body {
+        max-height: 60vh;
+        overflow-y: auto;
+    }
+    #apiQueryInputContainer input, #searchInput {
+        transition: all 0.3s ease;
+        border: 2px solid #e5e5e5;
+    }
+    #apiQueryInputContainer input:focus, #searchInput:focus {
+        outline: none !important;
+        border: 2px solid #333 !important;
+        box-shadow: 0 0 0 3px rgba(51, 51, 51, 0.1);
+        transform: translateY(-1px);
+    }
+    #searchInput {
+        border-radius: 10px;
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+    #apiResponseContent, #apiEndpoint {
+        font-family: 'Courier New', monospace;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        font-size: 13px;
+    }
+    #apiResponseContent::-webkit-scrollbar {
+        width: 6px;
+    }
+    #apiResponseContent::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+    #apiResponseContent::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+    #apiResponseContent::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    #apiLinks a {
+        display: inline-block;
+        text-decoration: none;
+        margin-right: 15px;
+        margin-bottom: 10px;
+        padding: 8px 16px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        color: #333;
+        border: 1px solid #e5e5e5;
+    }
+    #apiLinks a:hover {
+        background-color: #333;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    #loadingScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: 'Poppins', sans-serif;
+    }
+    #nameContainer {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-bottom: 10px;
+        animation: fadeInUp 0.6s ease;
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    #name {
+        font-size: 32px;
+        line-height: 1;
+        z-index: 2;
+        font-weight: 600;
+    }
+    #version {
+        background-color: #333;
+        color: white;
+        padding: 5px 12px;
+        font-size: 11px;
+        border-radius: 100px;
+        white-space: nowrap;
+        font-weight: 500;
+    }
+    .spinner-wrapper { text-align: center; }
+    .hero-section {
+        padding: 20px 25px;
+        background-color: white;
+        color: #333;
+        border-radius: 12px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border: 1px solid #e5e5e5;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .hero-section:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        border-color: #333;
+    }
+    .hero-section > div { width: 70%; }
+    .hero-section .text-muted {
+        font-size: 0.8rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        line-height: 1.2;
+    }
+    .lead { font-size: 15px; color: #666; }
+    .btn-dark {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 20px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+    .btn-dark:hover {
+        background-color: #000;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .form-control.is-invalid { border-color: #dc3545; animation: shake 0.5s; }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    .param-container .form-control:focus {
+        border-color: #333;
+        box-shadow: 0 0 0 0.25rem rgba(51, 51, 51, 0.25);
+    }
+    .category-header {
+        font-weight: 600;
+        position: relative;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    .category-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: #333;
+        border-radius: 2px;
+    }
+    .stats-container {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+    .stat-card {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        border: 1px solid #e5e5e5;
+        flex: 1;
+        min-width: 150px;
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .stat-card .stat-number {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+    }
+    .stat-card .stat-label {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+    }
+    .copy-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #333;
+        color: white;
+        border: none;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+    .copy-btn:hover { background: #000; transform: scale(1.05); }
+    .copy-btn.copied { background: #28a745; }
+    @media screen and (min-width: 768px) {
+        .modal-dialog {
+            padding: 180px;
+            max-width: 100%;
+            max-height: 60vh;
+        }
+    }
+    @media screen and (min-width: 1200px) {
+        .modal-dialog {
+            padding: 180px;
+            max-width: 100%;
+            max-height: 60vh;
+        }
+    }
+    .api-item { animation: fadeIn 0.5s ease; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .has-copy-btn { position: relative; padding-right: 80px !important; }
+    .param-container { position: relative; margin-bottom: 20px; }
+    .response-container { margin-top: 20px; }
+    #apiResponseContent img,
+    #apiResponseContent video,
+    #apiResponseContent audio {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+    #apiResponseContent embed { width: 100%; height: 400px; }
+    .preview-container { max-height: 400px; overflow-y: auto; }
+    .upload-container .progress { height: 20px; }
+    .upload-container .progress-bar { transition: width 0.3s ease; }
+    .badge { font-size: 0.7rem; padding: 0.25em 0.6em; }
+    .cost-badge {
+        font-size: 0.65rem !important;
+        padding: 1px 6px !important;
+        border-radius: 4px !important;
+        font-weight: 500 !important;
+    }
+    .cost-high {
+        background: linear-gradient(135deg, #ff6b6b, #ee5a24) !important;
+        color: white !important;
+    }
+    .cost-medium {
+        background: linear-gradient(135deg, #ffd93d, #ff9f1a) !important;
+        color: #333 !important;
+    }
+    .cost-low {
+        background: linear-gradient(135deg, #6bcf7f, #2ecc71) !important;
+        color: white !important;
+    }
+    .cost-free {
+        background: linear-gradient(135deg, #74b9ff, #0984e3) !important;
+        color: white !important;
+    }
+    
+.banner-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin: 0 auto 40px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: calc(100% - 30px); /* Memberikan ruang 15px di kiri dan kanan */
+}
+    
+#dynamicImage {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+    
+#dynamicImage:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+    
+@media (max-width: 768px) {
+    #dynamicImage {
+        height: 200px;
+    }
+    .banner-wrapper {
+        max-width: calc(100% - 20px); /* Lebih sedikit spacing di mobile */
+    }
+}
+    
+@media (max-width: 576px) {
+    #dynamicImage {
+        height: 150px;
+    }
+    .banner-wrapper {
+        max-width: calc(100% - 16px); /* Lebih sedikit spacing di mobile kecil */
+        margin-bottom: 30px;
+    }
+}
+    
+.container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px; /* Memberikan padding pada container */
+}
+    
+.container > *:not(.banner-wrapper) {
+    /* Hapus padding ini karena sudah ada di container */
+}
+    </style>
+</head>
+<body>
+    <div id="loadingScreen">
+        <div class="spinner-wrapper">
+            <div class="spinner-border text-dark mb-2" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p>Waitt...</p>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" style="display: flex; align-items: center;">
+                <span id="header" class="me-2"></span>
+                <div id="versionHeader" style="background-color: #333; color: white; padding: 4px 12px; font-size: 12px; border-radius: 100px;"></div>
+            </a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="banner-wrapper">
+            <img id="dynamicImage" class="banner" src="">
+        </div>
+        
+        <div id="nameContainer">
+            <h1 id="name"></h1>
+            <div id="version"></div>
+        </div>
+        <p id="description" class="lead mb-3"></p>
+        <div id="apiLinks" class="mb-4"></div>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="totalAPIs">0</div>
+                <div class="stat-label">Total APIs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCategories">0</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-card" id="rateLimitStat">
+                <div class="stat-number">100/100</div>
+                <div class="stat-label">Daily API Calls</div>
+                <small class="text-muted d-block mt-1" style="font-size: 10px;">
+                    Resets at 00:00 daily
+                </small>
+            </div>
+        </div>
+
+        <input type="text" id="searchInput" class="form-control mb-5" placeholder="Search API...">
+        <div class="tab-content" id="apiContent"></div>
+    </div>
+    <div class="modal fade" id="apiResponseModal" tabindex="-1" aria-labelledby="apiResponseModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" id="modalDialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title" id="apiResponseModalLabel"></h5>
+                        <p class="modal-desc text-muted mb-0" id="apiResponseModalDesc" style="font-size: 14px;"></p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="endpointContainer" class="mb-3 d-none">
+                        <label class="form-label small text-muted mb-1">Endpoint URL:</label>
+                        <div class="position-relative">
+                            <pre id="apiEndpoint" class="has-copy-btn" style="background-color: #f8f9fa; padding: 10px; border-radius: 5px;"></pre>
+                            <button class="copy-btn" id="copyEndpointBtn" style="display: none;">Copy</button>
+                        </div>
+                    </div>
+                    
+                    <div id="apiQueryInputContainer" class="mb-3"></div>
+                    
+                    <div id="apiResponseLoading" class="d-none text-center py-4">
+                        <div class="spinner-border custom-spinner" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <div id="apiResponseContainer" class="d-none response-container">
+                        <label class="form-label small text-muted mb-1">API Response:</label>
+                        <div class="position-relative">
+                            <div id="apiResponseContent" class="preview-container" style="background-color: #f8f9fa; padding: 10px; border-radius: 5px;"></div>
+                            <button class="copy-btn" id="copyResponseBtn" style="display: none;">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="submitQueryBtn" class="btn btn-dark">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // ===================== REUSABLE TABLE OPTION FUNCTION =====================
+    
+    function createTableOptionComponent(paramName, paramDesc, options, defaultValue = '') {
+        const container = document.createElement('div');
+        container.className = 'table-option-container';
+        container.dataset.paramName = paramName;
+        
+        const header = document.createElement('div');
+        header.className = 'option-header';
+        
+        const label = document.createElement('label');
+        label.className = 'form-label small text-muted mb-1';
+        label.textContent = `${paramName}${paramDesc ? ` - ${paramDesc}` : ''}`;
+        label.style.fontWeight = '600';
+        label.style.color = '#333';
+        
+        header.appendChild(label);
+        container.appendChild(header);
+        
+        const table = document.createElement('table');
+        table.className = 'options-table';
+        
+        const thead = document.createElement('thead');
+        thead.innerHTML = `
+            <tr>
+                <th width="50px">Pilih</th>
+                <th width="100px">Kode</th>
+                <th>Deskripsi</th>
+            </tr>
+        `;
+        table.appendChild(thead);
+        
+        const tbody = document.createElement('tbody');
+        
+        Object.entries(options).forEach(([key, value], index) => {
+            const row = document.createElement('tr');
+            
+            const radioCell = document.createElement('td');
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = `option_${paramName}`;
+            radio.value = key;
+            radio.className = 'option-radio';
+            radio.dataset.optionKey = key;
+            radio.dataset.optionValue = value;
+            
+            if (defaultValue && defaultValue === key) {
+                radio.checked = true;
+            } else if (!defaultValue && index === 0) {
+                radio.checked = true;
+            }
+            
+            radio.addEventListener('change', function() {
+                updateSelectedOptionDisplay(paramName, key, value);
+            });
+            
+            radioCell.appendChild(radio);
+            
+            const keyCell = document.createElement('td');
+            keyCell.innerHTML = `<span class="option-value">${key}</span>`;
+            
+            const valueCell = document.createElement('td');
+            valueCell.innerHTML = `<span class="option-desc">${value}</span>`;
+            
+            row.appendChild(radioCell);
+            row.appendChild(keyCell);
+            row.appendChild(valueCell);
+            tbody.appendChild(row);
+        });
+        
+        table.appendChild(tbody);
+        container.appendChild(table);
+        
+        const selectedDisplay = document.createElement('div');
+        selectedDisplay.className = 'selected-option-display d-none';
+        selectedDisplay.id = `selected-${paramName}-display`;
+        
+        const initialRadio = container.querySelector('input[type="radio"]:checked');
+        if (initialRadio) {
+            updateSelectedOptionDisplay(
+                paramName, 
+                initialRadio.dataset.optionKey, 
+                initialRadio.dataset.optionValue
+            );
+        }
+        
+        container.appendChild(selectedDisplay);
+        
+        return container;
+    }
+    
+    function updateSelectedOptionDisplay(paramName, key, value) {
+        const display = document.getElementById(`selected-${paramName}-display`);
+        if (display) {
+            display.innerHTML = `
+                <span>Selected: <strong>${paramName}</strong> = <span class="value">${key}</span></span>
+                <small>${value}</small>
+            `;
+            display.classList.remove('d-none');
+        }
+    }
+    
+    function getSelectedOptionValue(paramName) {
+        const container = document.querySelector(`.table-option-container[data-param-name="${paramName}"]`);
+        if (!container) return '';
+        
+        const selectedRadio = container.querySelector('input[type="radio"]:checked');
+        return selectedRadio ? selectedRadio.value : '';
+    }
+    
+    function getDefaultValue(item, paramName) {
+        if (!item || !item.path) return '';
+        
+        try {
+            const queryPart = item.path.split('?')[1];
+            if (queryPart) {
+                const params = new URLSearchParams(queryPart);
+                const paramValue = params.get(paramName);
+                if (paramValue) return paramValue;
+            }
+        } catch (e) {
+            console.error('Error parsing path:', e);
+        }
+        
+        return '';
+    }
+    
+    // ===================== FUNGSI UTAMA =====================
+    
+    async function fetchApiInfo() {
+        try {
+            const response = await fetch('/api/info');
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return await response.json();
+        } catch (error) {
+            return await fetch('../assets/settings.json').then(res => res.json());
+        }
+    }
+
+    async function uploadFile(file, endpoint, onProgress = null) {
+        return new Promise((resolve, reject) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const xhr = new XMLHttpRequest();
+            
+            if (onProgress) {
+                xhr.upload.addEventListener('progress', (event) => {
+                    if (event.lengthComputable) {
+                        const percentComplete = (event.loaded / event.total) * 100;
+                        onProgress(percentComplete);
+                    }
+                });
+            }
+            
+            xhr.addEventListener('load', () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        resolve(response);
+                    } catch (e) {
+                        resolve(xhr.responseText);
+                    }
+                } else {
+                    reject(new Error(`Upload failed: ${xhr.statusText}`));
+                }
+            });
+            
+            xhr.addEventListener('error', () => reject(new Error('Network error during upload')));
+            xhr.open('POST', endpoint);
+            xhr.send(formData);
+        });
+    }
+
+    function createApiItemElement(item) {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = `col-md-6 col-lg-4 api-item mb-4`;
+        itemDiv.setAttribute('data-name', item.name);
+        itemDiv.setAttribute('data-desc', item.desc);
+        
+        const hasParams = item.params && Object.keys(item.params).length > 0;
+        const hasUpload = item.upload === true;
+        const cost = item.cost || 1;
+        
+        let costClass = 'cost-free';
+        let costIcon = '💎';
+        if (cost >= 50) {
+            costClass = 'cost-high';
+            costIcon = '🔥';
+        } else if (cost >= 20) {
+            costClass = 'cost-medium';
+            costIcon = '⚡';
+        } else if (cost > 1) {
+            costClass = 'cost-low';
+            costIcon = '✨';
+        }
+        
+        itemDiv.innerHTML = `
+            <div class="hero-section d-flex align-items-center justify-content-between" style="height: 70px;">
+                <div>
+                    <h5 class="mb-0" style="font-size: 18px;">${item.name}</h5>
+                    <p class="text-muted mb-0" style="font-size: 0.8rem;">${item.desc}</p>
+                    <div class="d-flex align-items-center gap-1 mt-1">
+                        ${item.status ? `<span class="badge ${item.status === 'ready' ? 'bg-success' : 'bg-warning'}" style="font-size: 0.6rem;">${item.status}</span>` : ''}
+                        <span class="badge ${costClass} cost-badge" title="API call cost" style="cursor: help;">
+                            ${costIcon} Cost: ${cost}
+                        </span>
+                    </div>
+                </div>
+                <button class="btn btn-dark btn-sm get-api-btn" 
+                        data-api-path="${item.path}" 
+                        data-api-name="${item.name}" 
+                        data-api-desc="${item.desc}"
+                        data-has-params="${hasParams}"
+                        data-has-upload="${hasUpload}">
+                    ${hasUpload ? 'UPLOAD' : 'GET'}
+                </button>
+            </div>
+        `;
+        
+        return itemDiv;
+    }
+
+    async function processApiResponse(response, contentType) {
+        const result = { content: null, type: 'text', displayCopyButton: true };
+        
+        if (contentType && contentType.startsWith('image/')) {
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.className = 'img-fluid';
+            result.content = img;
+            result.type = 'image';
+            result.displayCopyButton = false;
+        }
+        else if (contentType && contentType.startsWith('audio/')) {
+            const blob = await response.blob();
+            const audioUrl = URL.createObjectURL(blob);
+            const audio = document.createElement('audio');
+            audio.controls = true;
+            audio.src = audioUrl;
+            result.content = audio;
+            result.type = 'audio';
+            result.displayCopyButton = false;
+        }
+        else if (contentType && contentType.startsWith('video/')) {
+            const blob = await response.blob();
+            const videoUrl = URL.createObjectURL(blob);
+            const video = document.createElement('video');
+            video.controls = true;
+            video.src = videoUrl;
+            video.style.maxHeight = '400px';
+            result.content = video;
+            result.type = 'video';
+            result.displayCopyButton = false;
+        }
+        else if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+            const pre = document.createElement('pre');
+            pre.textContent = JSON.stringify(data, null, 2);
+            result.content = pre;
+            result.type = 'json';
+        }
+        else if (contentType && contentType.startsWith('text/')) {
+            const text = await response.text();
+            const pre = document.createElement('pre');
+            pre.textContent = text;
+            result.content = pre;
+            result.type = 'text';
+        }
+        else {
+            const blob = await response.blob();
+            const fileUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = 'download';
+            link.textContent = 'Download File';
+            link.className = 'btn btn-dark mt-2';
+            result.content = link;
+            result.type = 'download';
+            result.displayCopyButton = false;
+        }
+        
+        return result;
+    }
+
+    async function handleApiResponse(response) {
+        try {
+            const responseClone = response.clone();
+            const contentType = response.headers.get('Content-Type');
+            
+            if (contentType && contentType.includes('application/json')) {
+                const data = await response.json();
+                
+                if (data.data && data.data.frontend_action === "reset_local_storage") {
+                    console.log("🔄 Reset signal received from backend!");
+                    
+                    Object.keys(localStorage).forEach(key => {
+                        if (key.startsWith('daily_usage_')) {
+                            localStorage.removeItem(key);
+                            console.log(`🧹 Cleared: ${key}`);
+                        }
+                    });
+                    
+                    updateUsageDisplay();
+                    
+                    data.message = `${data.message} | ✅ Frontend counter reset to 100/100`;
+                    
+                    if (typeof bootstrap !== 'undefined') {
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                        alertDiv.innerHTML = `
+                            <strong>✅ Counter Reset!</strong> Daily limit counter has been reset to 100/100.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        `;
+                        document.querySelector('.container').prepend(alertDiv);
+                    }
+                }
+                
+                const pre = document.createElement('pre');
+                pre.textContent = JSON.stringify(data, null, 2);
+                return { 
+                    content: pre, 
+                    displayCopyButton: true 
+                };
+            } else {
+                return await processApiResponse(responseClone, contentType);
+            }
+        } catch (error) {
+            console.error('Error handling API response:', error);
+            const pre = document.createElement('pre');
+            pre.textContent = `Error: ${error.message}`;
+            return { 
+                content: pre, 
+                displayCopyButton: false 
+            };
+        }
+    }
+
+    const MAX_DAILY_LIMIT = 100;
+
+    function getSimpleUsage() {
+        const today = new Date().toISOString().split('T')[0];
+        return parseInt(localStorage.getItem(`daily_usage_${today}`)) || 0;
+    }
+
+    function updateSimpleUsage(cost) {
+        const today = new Date().toISOString().split('T')[0];
+        const current = getSimpleUsage();
+        localStorage.setItem(`daily_usage_${today}`, (current + cost).toString());
+        updateUsageDisplay();
+    }
+
+    function updateUsageDisplay() {
+        const today = new Date().toISOString().split('T')[0];
+        const used = getSimpleUsage();
+        const remaining = MAX_DAILY_LIMIT - used;
+        
+        const rateLimitStat = document.getElementById('rateLimitStat');
+        if (rateLimitStat) {
+            rateLimitStat.innerHTML = `
+                <div class="stat-number">${remaining}/${MAX_DAILY_LIMIT}</div>
+                <div class="stat-label">Daily API Calls</div>
+                <small class="text-muted d-block mt-1" style="font-size: 10px;">
+                    Backend-managed limit
+                </small>
+            `;
+        }
+    }
+
+    function setupAutoReset() {
+        function scheduleNextReset() {
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            const timeUntilMidnight = tomorrow.getTime() - now.getTime();
+            setTimeout(() => {
+                updateUsageDisplay();
+                scheduleNextReset();
+            }, timeUntilMidnight);
+        }
+        scheduleNextReset();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const loadingScreen = document.getElementById("loadingScreen");
+        const body = document.body;
+        body.classList.add("no-scroll");
+
+        let apiInfo;
+        
+        try {
+            apiInfo = await fetchApiInfo();
+
+            const setContent = (id, property, value) => {
+                const element = document.getElementById(id);
+                if (element) element[property] = value;
+            };
+
+            const dynamicImage = document.getElementById('dynamicImage');
+            if (dynamicImage && apiInfo.bannerImage) {
+                dynamicImage.src = apiInfo.bannerImage;
+            }
+            
+            setContent('page', 'textContent', apiInfo.name || "Xerumi API");
+            setContent('header', 'textContent', apiInfo.name || "Xerumi API");
+            setContent('name', 'textContent', apiInfo.name || "Xerumi API");
+            setContent('version', 'textContent', apiInfo.version || "v2.0");
+            setContent('versionHeader', 'textContent', apiInfo.header?.status || "Online!");
+            
+            const descriptionEl = document.getElementById('description');
+            if (descriptionEl) {
+                descriptionEl.textContent = apiInfo.description || "Simple and powerful tools API";
+                if (apiInfo.apiSettings?.creator) {
+                    descriptionEl.innerHTML += `<br><small class="text-muted">Creator: ${apiInfo.apiSettings.creator}</small>`;
+                }
+            }
+
+            let totalAPIs = 0;
+            const apiContent = document.getElementById('apiContent');
+            
+            if (apiInfo.categories && Array.isArray(apiInfo.categories)) {
+                apiInfo.categories.forEach((category) => {
+                    if (!category.items || !Array.isArray(category.items)) return;
+                    
+                    const sortedItems = category.items.sort((a, b) => a.name.localeCompare(b.name));
+                    totalAPIs += sortedItems.length;
+                    
+                    const categoryContainer = document.createElement('div');
+                    categoryContainer.className = 'category-container mb-5';
+                    
+                    const categoryHeader = document.createElement('h3');
+                    categoryHeader.className = 'mb-3 category-header';
+                    categoryHeader.style.fontSize = '22px';
+                    categoryHeader.textContent = category.name;
+                    categoryContainer.appendChild(categoryHeader);
+                    
+                    const row = document.createElement('div');
+                    row.className = 'row';
+                    
+                    sortedItems.forEach((item) => {
+                        const itemElement = createApiItemElement(item);
+                        row.appendChild(itemElement);
+                    });
+                    
+                    categoryContainer.appendChild(row);
+                    apiContent.appendChild(categoryContainer);
+                });
+            }
+
+            document.getElementById('totalAPIs').textContent = totalAPIs;
+            document.getElementById('totalCategories').textContent = apiInfo.categories?.length || 0;
+
+            updateUsageDisplay();
+            setupAutoReset();
+            setInterval(updateUsageDisplay, 5 * 60 * 1000);
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const apiItems = document.querySelectorAll('.api-item');
+                const categoryHeaders = document.querySelectorAll('.category-header');
+
+                apiItems.forEach(item => {
+                    const name = item.getAttribute('data-name').toLowerCase();
+                    const desc = item.getAttribute('data-desc').toLowerCase();
+                    item.style.display = (name.includes(searchTerm) || desc.includes(searchTerm)) ? '' : 'none';
+                });
+
+                categoryHeaders.forEach(header => {
+                    const categoryContainer = header.parentElement;
+                    const visibleItems = categoryContainer.querySelectorAll('.api-item:not([style*="display: none"])');
+                    header.style.display = visibleItems.length ? '' : 'none';
+                    categoryContainer.style.display = visibleItems.length ? '' : 'none';
+                });
+            });
+
+            function copyToClipboard(text, button) {
+                navigator.clipboard.writeText(text).then(() => {
+                    const originalText = button.textContent;
+                    button.textContent = 'Copied!';
+                    button.classList.add('copied');
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.classList.remove('copied');
+                    }, 2000);
+                });
+            }
+
+            document.getElementById('copyEndpointBtn').addEventListener('click', function() {
+                const endpoint = document.getElementById('apiEndpoint').textContent;
+                copyToClipboard(endpoint, this);
+            });
+
+            document.getElementById('copyResponseBtn').addEventListener('click', function() {
+                const responseContent = document.getElementById('apiResponseContent');
+                let textToCopy = '';
+                const preElement = responseContent.querySelector('pre');
+                if (preElement) textToCopy = preElement.textContent;
+                else textToCopy = responseContent.textContent;
+                copyToClipboard(textToCopy, this);
+            });
+
+            document.addEventListener('click', event => {
+                if (!event.target.classList.contains('get-api-btn')) return;
+
+                const { apiPath, apiName, apiDesc, hasParams, hasUpload } = event.target.dataset;
+                
+                const allApiItems = apiInfo.categories?.flatMap(category => category.items || []) || [];
+                const currentItem = allApiItems.find(item => item.path === apiPath);
+                const cost = currentItem?.cost || 1;
+                
+                const modal = new bootstrap.Modal(document.getElementById('apiResponseModal'));
+                const modalRefs = {
+                    label: document.getElementById('apiResponseModalLabel'),
+                    desc: document.getElementById('apiResponseModalDesc'),
+                    content: document.getElementById('apiResponseContent'),
+                    endpoint: document.getElementById('apiEndpoint'),
+                    spinner: document.getElementById('apiResponseLoading'),
+                    queryInputContainer: document.getElementById('apiQueryInputContainer'),
+                    submitBtn: document.getElementById('submitQueryBtn'),
+                    copyResponseBtn: document.getElementById('copyResponseBtn'),
+                    responseContainer: document.getElementById('apiResponseContainer'),
+                    endpointContainer: document.getElementById('endpointContainer')
+                };
+
+                modalRefs.label.textContent = apiName;
+                modalRefs.desc.textContent = apiDesc;
+                modalRefs.content.innerHTML = '';
+                modalRefs.endpoint.textContent = '';
+                modalRefs.spinner.classList.add('d-none');
+                modalRefs.responseContainer.classList.add('d-none');
+                modalRefs.endpointContainer.classList.add('d-none');
+                modalRefs.copyResponseBtn.style.display = 'none';
+                document.getElementById('copyEndpointBtn').style.display = 'none';
+                modalRefs.queryInputContainer.innerHTML = '';
+                modalRefs.submitBtn.classList.remove('d-none');
+                modalRefs.submitBtn.textContent = hasUpload === 'true' ? 'Upload' : 'Submit';
+
+                const baseApiUrl = `${window.location.origin}${apiPath}`;
+                const hasQueryParams = apiPath.includes('?');
+                
+                if (hasUpload === 'true') {
+                    const uploadContainer = document.createElement('div');
+                    uploadContainer.className = 'upload-container';
+                    
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.className = 'form-control mb-3';
+                    fileInput.accept = currentItem?.accept || '*/*';
+                    
+                    const progressContainer = document.createElement('div');
+                    progressContainer.className = 'progress mb-3 d-none';
+                    progressContainer.innerHTML = '<div class="progress-bar" role="progressbar" style="width: 0%"></div>';
+                    
+                    uploadContainer.appendChild(fileInput);
+                    uploadContainer.appendChild(progressContainer);
+                    modalRefs.queryInputContainer.appendChild(uploadContainer);
+                    
+                    modalRefs.submitBtn.onclick = async () => {
+                        if (!fileInput.files || fileInput.files.length === 0) {
+                            alert('Please select a file to upload');
+                            return;
+                        }
+                        
+                        updateSimpleUsage(cost);
+                        
+                        progressContainer.classList.remove('d-none');
+                        const progressBar = progressContainer.querySelector('.progress-bar');
+                        
+                        try {
+                            const result = await uploadFile(
+                                fileInput.files[0], 
+                                baseApiUrl,
+                                (progress) => {
+                                    progressBar.style.width = `${progress}%`;
+                                    progressBar.textContent = `${Math.round(progress)}%`;
+                                }
+                            );
+                            
+                            const pre = document.createElement('pre');
+                            pre.textContent = JSON.stringify(result, null, 2);
+                            modalRefs.content.appendChild(pre);
+                            modalRefs.copyResponseBtn.style.display = 'block';
+                            modalRefs.responseContainer.classList.remove('d-none');
+                        } catch (error) {
+                            const pre = document.createElement('pre');
+                            pre.textContent = `Error: ${error.message}`;
+                            modalRefs.content.appendChild(pre);
+                            modalRefs.responseContainer.classList.remove('d-none');
+                            modalRefs.copyResponseBtn.style.display = 'none';
+                        } finally {
+                            modalRefs.spinner.classList.add('d-none');
+                            progressContainer.classList.add('d-none');
+                        }
+                    };
+                } 
+                else if (hasParams === 'true' || hasQueryParams) {
+                    let params = {};
+                    
+                    if (hasQueryParams) {
+                        const urlParams = new URLSearchParams(apiPath.split('?')[1] || '');
+                        params = Object.fromEntries(urlParams.entries());
+                    }
+                    
+                    if (currentItem?.params) params = currentItem.params;
+                    
+                    const paramContainer = document.createElement('div');
+                    paramContainer.className = 'param-container';
+                    
+                    Object.entries(params).forEach(([paramName, paramDesc], index) => {
+                        let paramOptions = null;
+                        
+                        if (currentItem.styles && typeof currentItem.styles === 'object') {
+                            if (currentItem.styles[paramName]) {
+                                paramOptions = currentItem.styles[paramName];
+                            } else if (paramName === 'style' && Object.keys(currentItem.styles).length > 0) {
+                                paramOptions = currentItem.styles;
+                            }
+                        }
+                        
+                        if (!paramOptions && currentItem.options && currentItem.options[paramName]) {
+                            paramOptions = currentItem.options[paramName];
+                        }
+                        
+                        if (paramOptions && typeof paramOptions === 'object' && Object.keys(paramOptions).length > 0) {
+                            const tableComponent = createTableOptionComponent(
+                                paramName,
+                                paramDesc,
+                                paramOptions,
+                                getDefaultValue(currentItem, paramName)
+                            );
+                            paramContainer.appendChild(tableComponent);
+                        } else {
+                            const paramGroup = document.createElement('div');
+                            paramGroup.className = index < Object.keys(params).length - 1 ? 'mb-2' : '';
+                            
+                            const label = document.createElement('label');
+                            label.className = 'form-label small text-muted mb-1';
+                            label.textContent = `${paramName}${paramDesc ? ` - ${paramDesc}` : ''}`;
+                            
+                            const inputField = document.createElement('input');
+                            inputField.type = paramName === 'apikey' ? 'password' : 'text';
+                            inputField.className = 'form-control';
+                            inputField.placeholder = `Enter ${paramName}...`;
+                            inputField.dataset.param = paramName;
+                            inputField.required = paramDesc && paramDesc.toLowerCase().includes('wajib');
+                            
+                            const defaultValue = getDefaultValue(currentItem, paramName);
+                            if (defaultValue) {
+                                inputField.value = defaultValue;
+                            }
+                            
+                            inputField.addEventListener('input', validateInputs);
+                            
+                            paramGroup.appendChild(label);
+                            paramGroup.appendChild(inputField);
+                            paramContainer.appendChild(paramGroup);
+                        }
+                    });
+                    
+                    modalRefs.queryInputContainer.appendChild(paramContainer);
+                    
+                    modalRefs.submitBtn.onclick = async () => {
+                        const inputs = modalRefs.queryInputContainer.querySelectorAll('input[data-param]');
+                        const newParams = new URLSearchParams();
+                        let isValid = true;
+                        
+                        inputs.forEach(input => {
+                            if (input.required && !input.value.trim()) {
+                                isValid = false;
+                                input.classList.add('is-invalid');
+                            } else {
+                                input.classList.remove('is-invalid');
+                                if (input.value.trim()) {
+                                    newParams.append(input.dataset.param, input.value.trim());
+                                }
+                            }
+                        });
+                        
+                        const tableContainers = modalRefs.queryInputContainer.querySelectorAll('.table-option-container');
+                        tableContainers.forEach(container => {
+                            const paramName = container.dataset.paramName;
+                            const selectedValue = getSelectedOptionValue(paramName);
+                            if (selectedValue) {
+                                newParams.append(paramName, selectedValue);
+                            }
+                        });
+                        
+                        if (!isValid) {
+                            modalRefs.content.innerHTML = '<pre>Please fill in all required fields.</pre>';
+                            modalRefs.responseContainer.classList.remove('d-none');
+                            modalRefs.copyResponseBtn.style.display = 'none';
+                            return;
+                        }
+                        
+                        const apiUrlWithParams = `${window.location.origin}${apiPath.split('?')[0]}${newParams.toString() ? '?' + newParams.toString() : ''}`;
+                        
+                        updateSimpleUsage(cost);
+                        
+                        modalRefs.endpoint.textContent = apiUrlWithParams;
+                        modalRefs.endpointContainer.classList.remove('d-none');
+                        document.getElementById('copyEndpointBtn').style.display = 'block';
+                        
+                        modalRefs.spinner.classList.remove('d-none');
+                        modalRefs.responseContainer.classList.add('d-none');
+                        modalRefs.copyResponseBtn.style.display = 'none';
+                        modalRefs.content.innerHTML = '';
+
+                        try {
+                            const response = await fetch(apiUrlWithParams);
+                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                            
+                            const result = await handleApiResponse(response);
+                            modalRefs.content.appendChild(result.content);
+                            modalRefs.copyResponseBtn.style.display = result.displayCopyButton ? 'block' : 'none';
+                            modalRefs.responseContainer.classList.remove('d-none');
+                        } catch (error) {
+                            const pre = document.createElement('pre');
+                            pre.textContent = `Error: ${error.message}`;
+                            modalRefs.content.appendChild(pre);
+                            modalRefs.responseContainer.classList.remove('d-none');
+                            modalRefs.copyResponseBtn.style.display = 'none';
+                        } finally {
+                            modalRefs.spinner.classList.add('d-none');
+                        }
+                    };
+                } 
+                else {
+                    modalRefs.submitBtn.onclick = async () => {
+                        updateSimpleUsage(cost);
+                        
+                        modalRefs.endpoint.textContent = baseApiUrl;
+                        modalRefs.endpointContainer.classList.remove('d-none');
+                        document.getElementById('copyEndpointBtn').style.display = 'block';
+                        
+                        modalRefs.spinner.classList.remove('d-none');
+                        modalRefs.responseContainer.classList.add('d-none');
+                        modalRefs.copyResponseBtn.style.display = 'none';
+                        modalRefs.content.innerHTML = '';
+
+                        try {
+                            const response = await fetch(baseApiUrl);
+                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                            
+                            const result = await handleApiResponse(response);
+                            modalRefs.content.appendChild(result.content);
+                            modalRefs.copyResponseBtn.style.display = result.displayCopyButton ? 'block' : 'none';
+                            modalRefs.responseContainer.classList.remove('d-none');
+                        } catch (error) {
+                            const pre = document.createElement('pre');
+                            pre.textContent = `Error: ${error.message}`;
+                            modalRefs.content.appendChild(pre);
+                            modalRefs.responseContainer.classList.remove('d-none');
+                            modalRefs.copyResponseBtn.style.display = 'none';
+                        } finally {
+                            modalRefs.spinner.classList.add('d-none');
+                        }
+                    };
+                }
+                
+                modal.show();
+            });
+
+            function validateInputs() {
+                const submitBtn = document.getElementById('submitQueryBtn');
+                const inputs = document.querySelectorAll('.param-container input[data-param]');
+                const isValid = Array.from(inputs).every(input => 
+                    !input.required || input.value.trim() !== ''
+                );
+                submitBtn.disabled = !isValid;
+            }
+        } catch (error) {
+            console.error('Error loading API info:', error);
+        } finally {
+            setTimeout(() => {
+                loadingScreen.style.display = "none";
+                body.classList.remove("no-scroll");
+            }, 2000);
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        const navbar = document.querySelector('.navbar');
+        const navbarBrand = document.querySelector('.navbar-brand');
+        if (window.scrollY > 0) {
+            navbarBrand.classList.add('visible');
+            navbar.classList.add('scrolled');
+        } else {
+            navbarBrand.classList.remove('visible');
+            navbar.classList.remove('scrolled');
+        }
+    });
+</script>
+</body>
+</html>
