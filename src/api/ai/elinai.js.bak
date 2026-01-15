@@ -1,0 +1,353 @@
+const crypto = require('crypto');
+const axios = require('axios');
+const qs = require('qs');
+
+// ================================
+// REGISTRATION FUNCTION
+// ================================
+async function registerElinAI(email, password) {
+    const url = "https://api.elin.ai/api/v1/users/register";
+    const deviceId = crypto.randomBytes(8).toString('hex');
+    
+    const headers = {
+        'User-Agent': 'Elin AI/2.8.0 (ai.elin.app.android; build:220; Android 15; Model:25028RN03A)',
+        'Accept': 'application/json',
+        'Accept-Encoding': 'gzip',
+        'Content-Type': 'application/json',
+        'x-device-id': deviceId,
+        'accept-language': 'en',
+        'x-timezone': 'Asia/Jakarta',
+        'accept-charset': 'UTF-8'
+    };
+
+    const payload = {
+        email: email,
+        password: password
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(payload)
+        });
+
+        if (response.status === 200 || response.status === 201) {
+            const data = await response.json();
+
+            if (data.is_active === true) {
+                return {
+                    success: true,
+                    message: "Registrasi Berhasil!",
+                    data: {
+                        id: data.id || 'N/A',
+                        email: data.email || 'N/A',
+                        created: data.created || 'N/A',
+                        deviceId: deviceId
+                    }
+                };
+            } else {
+                return {
+                    success: false,
+                    message: "Akun dibuat tapi status tidak aktif"
+                };
+            }
+        } else {
+            try {
+                const errData = await response.json();
+                return {
+                    success: false,
+                    message: errData.detail || "Gagal Mendaftar"
+                };
+            } catch {
+                return {
+                    success: false,
+                    message: "Gagal Mendaftar"
+                };
+            }
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: "Terjadi kesalahan koneksi"
+        };
+    }
+}
+
+// ================================
+// CHAT FUNCTION
+// ================================
+async function chatElinAI(username, password, prompt, chatId = null) {
+    const BASE_URL = "https://api.elin.ai";
+    const HEADERS = {
+        'User-Agent': 'Elin AI/2.8.0 (ai.elin.app.android; build:220; Android 15; Model:25028RN03A)',
+        'Accept': 'application/json',
+        'Accept-Encoding': 'gzip',
+        'x-device-id': crypto.randomBytes(8).toString('hex'),
+        'accept-language': 'en',
+        'x-timezone': 'Asia/Jakarta',
+        'accept-charset': 'UTF-8'
+    };
+
+    try {
+        // Login to get token
+        const loginData = qs.stringify({ 
+            username: username, 
+            password: password 
+        });
+        
+        const loginRes = await axios.post(
+            BASE_URL + "/api/v1/auth/token", 
+            loginData, 
+            {
+                headers: {
+                    ...HEADERS,
+                    'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                },
+                timeout: 10000
+            }
+        );
+        
+        const token = loginRes.data?.access_token;
+        if (!token) {
+            throw new Error("Gagal login: Token tidak valid");
+        }
+
+        const authHeaders = {
+            ...HEADERS,
+            'authorization': `Bearer ${token}`
+        };
+
+        // Create new chat session if not provided
+        if (!chatId) {
+            const sessionRes = await axios.get(
+                BASE_URL + "/api/v3/chats/sessions/id", 
+                { 
+                    headers: authHeaders,
+                    timeout: 10000
+                }
+            );
+            chatId = sessionRes.data?.id;
+            if (!chatId) {
+                throw new Error("Gagal membuat session ID baru");
+            }
+        }
+
+        // Prepare chat payload
+        const payload = {
+            id: chatId,
+            messages: [{
+                type: "user",
+                order: 1,
+                timestamp: new Date().toISOString(),
+                context: {},
+                content: {
+                    type: "text",
+                    content: prompt
+                }
+            }],
+            type: "generic",
+            overrides: { retry: false }
+        };
+
+        // Send chat request with streaming
+        const chatRes = await axios.post(
+            BASE_URL + `/api/v3/chats/${chatId}/stream`, 
+            payload, 
+            {
+                headers: {
+                    ...authHeaders,
+                    'Content-Type': 'application/json'
+                },
+                responseType: 'stream',
+                timeout: 30000
+            }
+        );
+
+        // Process streaming response
+        return new Promise((resolve, reject) => {
+            let fullData = '';
+            chatRes.data.on('data', (chunk) => {
+                fullData += chunk.toString();
+            });
+            
+            chatRes.data.on('end', () => {
+                const lines = fullData.split('\n');
+                let finalContent = "";
+                
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        try {
+                            const jsonStr = line.replace('data: ', '').trim();
+                            if (jsonStr === '[DONE]') break;
+                            
+                            const parsed = JSON.parse(jsonStr);
+                            if (parsed.content && parsed.content.type === 'markdown') {
+                                finalContent = parsed.content.content;
+                            }
+                        } catch (e) {
+                            // Skip parsing errors
+                        }
+                    }
+                }
+                
+                resolve({
+                    success: true,
+                    chatId: chatId,
+                    response: finalContent || "Tidak ada respon teks."
+                });
+            });
+
+            chatRes.data.on('error', (err) => {
+                reject(new Error(`Stream error: ${err.message}`));
+            });
+        });
+
+    } catch (error) {
+        console.error('Chat Error:', error.message);
+        
+        if (error.response) {
+            return {
+                success: false,
+                message: `Server Error (${error.response.status}): ${error.response.data?.detail || 'Unknown error'}`
+            };
+        } else if (error.request) {
+            return {
+                success: false,
+                message: "Tidak ada respons dari server"
+            };
+        } else {
+            return {
+                success: false,
+                message: `Error: ${error.message}`
+            };
+        }
+    }
+}
+
+// ================================
+// ROUTES
+// ================================
+module.exports = function(app) {
+    // POST /ai/elinai - Register account
+    app.post("/ai/elinai", async (req, res) => {
+        const { email, password } = req.body;
+        
+        if (!email) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'email' wajib diisi."
+            });
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'password' wajib diisi."
+            });
+        }
+
+        try {
+            const result = await registerElinAI(email, password);
+            
+            if (result.success) {
+                return res.json({
+                    status: true,
+                    creator: "aerixxx",
+                    result: result.data
+                });
+            } else {
+                return res.status(400).json({
+                    status: false,
+                    creator: "aerixxx",
+                    message: result.message || "Gagal membuat akun"
+                });
+            }
+            
+        } catch (error) {
+            console.error('Register Error:', error);
+            return res.status(500).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Gagal membuat akun Elin AI"
+            });
+        }
+    });
+
+    // POST /ai/elinai/chat - Chat with AI
+    app.post("/ai/elinai/chat", async (req, res) => {
+        const { username, password, prompt, chat_id } = req.body;
+        
+        if (!username) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'username' wajib diisi."
+            });
+        }
+
+        if (!password) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'password' wajib diisi."
+            });
+        }
+
+        if (!prompt) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'prompt' wajib diisi."
+            });
+        }
+
+        try {
+            const result = await chatElinAI(username, password, prompt, chat_id);
+            
+            if (result.success) {
+                return res.json({
+                    status: true,
+                    creator: "aerixxx",
+                    result: {
+                        chatId: result.chatId,
+                        response: result.response
+                    }
+                });
+            } else {
+                return res.status(400).json({
+                    status: false,
+                    creator: "aerixxx",
+                    message: result.message || "Gagal melakukan chat"
+                });
+            }
+            
+        } catch (error) {
+            console.error('Chat Endpoint Error:', error);
+            return res.status(500).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Gagal melakukan chat dengan Elin AI"
+            });
+        }
+    });
+
+    // GET endpoints untuk testing (opsional)
+    app.get("/ai/elinai", (req, res) => {
+        return res.status(405).json({
+            status: false,
+            creator: "aerixxx",
+            message: "Method GET tidak didukung. Gunakan POST dengan parameter email dan password."
+        });
+    });
+
+    app.get("/ai/elinai/chat", (req, res) => {
+        return res.status(405).json({
+            status: false,
+            creator: "aerixxx",
+            message: "Method GET tidak didukung. Gunakan POST dengan parameter username, password, dan prompt."
+        });
+    });
+};

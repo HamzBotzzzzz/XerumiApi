@@ -1,0 +1,131 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+async function nomorHokiBagua(query) {
+    return new Promise((resolve, reject) => {
+        // Membersihkan nomor telepon (hapus spasi, tanda minus, dll)
+        const nomor = query.replace(/[^0-9]/g, '');
+        
+        if (nomor.length < 1) {
+            return reject(new Error('Nomor telepon tidak valid'));
+        }
+
+        axios.get('https://www.primbon.com/no_hoki_bagua_shuzi.htm')
+            .then(({ data }) => {
+                const $ = cheerio.load(data);
+                const result = {};
+                
+                // Ekstrak tabel interpretasi angka
+                const interpretasiAngka = [];
+                $('table').eq(0).find('tr').each((i, row) => {
+                    if (i > 0) { // Lewati header
+                        const cols = $(row).find('td');
+                        if (cols.length >= 2) {
+                            const angka = $(cols[0]).text().trim();
+                            const arti = $(cols[1]).text().trim();
+                            interpretasiAngka.push({ angka, arti });
+                        }
+                    }
+                });
+
+                // Ekstrak arti angka dari tabel utama
+                const artiAngka = [];
+                $('table').eq(1).find('tr').each((i, row) => {
+                    if (i > 0) {
+                        const cols = $(row).find('td');
+                        if (cols.length >= 3) {
+                            const no = $(cols[0]).text().trim();
+                            const arti = $(cols[1]).text().trim();
+                            const kategori = $(cols[2]).text().trim();
+                            artiAngka.push({ no, arti, kategori });
+                        }
+                    }
+                });
+
+                // Ekstrak informasi tentang Bagua Shuzi
+                const baguaInfo = [];
+                $('#body').find('p').each((i, elem) => {
+                    const text = $(elem).text().trim();
+                    if (text && text.length > 10) {
+                        baguaInfo.push(text);
+                    }
+                });
+
+                // Analisis nomor yang dimasukkan
+                const analisisNomor = [];
+                const angkaNomor = nomor.split('');
+                
+                // Analisis setiap digit
+                angkaNomor.forEach((digit, index) => {
+                    const artiDigit = artiAngka.find(item => item.no === digit);
+                    if (artiDigit) {
+                        analisisNomor.push({
+                            posisi: index + 1,
+                            angka: digit,
+                            arti: artiDigit.arti,
+                            kategori: artiDigit.kategori
+                        });
+                    }
+                });
+
+                // Hitung total angka (reduksi ke satu digit)
+                let totalAngka = angkaNomor.reduce((sum, digit) => sum + parseInt(digit), 0);
+                while (totalAngka > 9) {
+                    totalAngka = totalAngka.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+                }
+                
+                // Cari arti dari total angka
+                const artiTotal = artiAngka.find(item => item.no === totalAngka.toString());
+
+                resolve({
+                    success: true,
+                    result: {
+                        nomor_input: nomor,
+                        analisis_per_digit: analisisNomor,
+                        total_angka_reduksi: totalAngka,
+                        arti_total: artiTotal || {},
+                        interpretasi_angka: interpretasiAngka,
+                        daftar_arti_angka: artiAngka,
+                        informasi_bagua: baguaInfo,
+                        catatan: "Analisis berdasarkan primbon Bagua Shuzi"
+                    },
+                    query: query,
+                    timestamp: new Date().toISOString()
+                });
+            })
+            .catch(reject);
+    });
+}
+
+module.exports = function(app) {
+    app.get("/primbon/nomorhoki", async (req, res) => {
+        const { nomor } = req.query;
+        
+        if (!nomor) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'nomor' wajib diisi."
+            });
+        }
+
+        try {
+            const result = await nomorHokiBagua(nomor);
+            
+            if (result.success) {
+                return res.json({
+                    status: true,
+                    creator: "aerixxx",
+                    result: result.result
+                });
+            }
+            
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Gagal menganalisis nomor hoki"
+            });
+        }
+    });
+};

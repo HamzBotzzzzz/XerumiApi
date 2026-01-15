@@ -1,0 +1,181 @@
+const WebSocket = require('ws');
+
+function generateRandomLetters() {
+    return Math.random().toString(36).substring(2, 7);
+}
+
+async function aiCover(character, audio) {
+  return new Promise(async (resolve, reject) => {
+    let result = {}
+    let name = Math.floor(Math.random() * 100000000000000000) + generateRandomLetters() + '.mp4'
+    
+    let characters = {
+      "kobo": 2,
+      "zeta": 0,
+      "gura": 20,
+      "kaela": 4,
+      "pekora": 6,
+      "miko": 8,
+      "subaru": 10,
+      "korone": 12,
+      "luna": 14,
+      "anya": 16,
+      "reine": 18,
+      "calli": 22,
+      "kroni": 24
+    }
+    
+    let getCharacter = characters[character]
+    
+    if (typeof getCharacter === 'undefined') {
+        return reject(new Error('Karakter tidak valid'));
+    }
+
+    let send_has_payload = { "fn_index": getCharacter, "session_hash": "dtniinetjz6" }
+    let send_data_payload = {
+      "fn_index": getCharacter,
+      "data": [
+        {
+          "data": "data:audio/mpeg;base64," + audio.toString('base64'),
+          "name": name
+        },
+        0,
+        "pm",
+        0.6,
+        false,
+        "",
+        "en-US-AnaNeural-Female"
+      ],
+      "event_data": null,
+      "session_hash": "dtniinetjz6"
+    }
+
+    const ws = new WebSocket("wss://yanzbotz-waifu-yanzbotz.hf.space/queue/join");
+    
+    ws.onopen = function() {
+      console.log("Connected to websocket");
+    };
+
+    ws.onmessage = async function(event) {
+      let message;
+      try {
+        message = JSON.parse(event.data);
+      } catch (e) {
+        console.error("Invalid JSON received:", event.data);
+        return;
+      }
+
+      switch (message.msg) {
+        case 'send_hash':
+          ws.send(JSON.stringify(send_has_payload));
+          break;
+
+        case 'estimation':
+          console.log('Menunggu antrean: ' + message.rank);
+          break;
+
+        case 'send_data':
+          console.log('Processing your audio....');
+          ws.send(JSON.stringify(send_data_payload));
+          break;
+          
+        case 'process_completed':
+          if (message.output && message.output.data && message.output.data[1]) {
+            // Kembalikan full URL atau base64 data
+            const fileUrl = 'https://yanzbotz-waifu-yanzbotz.hf.space/file=' + message.output.data[1].name;
+            
+            // Untuk preview yang lebih baik, Anda bisa:
+            // 1. Return URL (sederhana)
+            result = {
+              status: true,
+              creator: "aerixxx",
+              result: {
+                base64: fileUrl,
+                character: character,
+                message: "AI Cover generated successfully"
+              }
+            };
+          }
+          break;
+      }
+    };
+
+    ws.onclose = function(event) {
+      if (event.code === 1000) {
+        console.log('Process completed');
+      } else {
+        console.log('WebSocket Connection Error');
+      }
+      // Pastikan result terisi
+      if (!result.status && !result.error) {
+        result = {
+          status: false,
+          creator: "aerixxx",
+          message: "Gagal memproses audio"
+        };
+      }
+      resolve(result);
+    };
+    
+    ws.onerror = function(error) {
+      reject(error);
+    };
+    
+    // Timeout after 30 seconds
+    setTimeout(() => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
+      if (!result.status) {
+        result = {
+          status: false,
+          creator: "aerixxx",
+          message: "Timeout processing audio"
+        };
+      }
+      resolve(result);
+    }, 30000);
+  });
+}
+
+module.exports = function(app) {        
+    // Endpoint untuk AI Cover
+    app.get("/ai/cover", async (req, res) => {
+        const { character, audio } = req.query;
+        
+        if (!character || !audio) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'character' dan 'audio' (base64) wajib diisi."
+            });
+        }
+
+        try {
+            // Validasi base64 audio
+            const audioBuffer = Buffer.from(audio, 'base64');
+            if (audioBuffer.length === 0) {
+                return res.json({
+                    status: false,
+                    creator: "aerixxx",
+                    message: "Audio base64 tidak valid"
+                });
+            }
+            
+            console.log(`Processing AI Cover for character: ${character}, audio size: ${audioBuffer.length} bytes`);
+            
+            const result = await aiCover(character, audioBuffer);
+            
+            // Return JSON untuk ditangani oleh preview handler
+            return res.json(result);
+            
+        } catch (error) {
+            console.error("AI Cover error:", error);
+            return res.status(500).json({
+                status: false,
+                creator: "aerixxx",
+                message: error.message || "Gagal membuat AI cover"
+            });
+        }
+    });
+};

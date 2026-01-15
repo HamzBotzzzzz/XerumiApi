@@ -1,0 +1,62 @@
+const axios = require('axios');
+const FormData = require('form-data');
+
+async function textToSpeech(text, language = 'id', speaker = 'female') {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const form = new FormData();
+            form.append('text', text);
+            form.append('lang', language);
+            form.append('speaker', speaker);
+            
+            const response = await axios.post('https://api.voicerss.org/', form, {
+                headers: form.getHeaders(),
+                responseType: 'arraybuffer'
+            });
+            
+            const base64Audio = Buffer.from(response.data).toString('base64');
+            
+            resolve({
+                success: true,
+                audio: base64Audio,
+                format: 'audio/mp3',
+                text: text
+            });
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+module.exports = function(app) {
+// Endpoint untuk Text-to-Speech
+    app.get("/random/tts", async (req, res) => {
+        const { text, lang, speaker } = req.query;
+        
+        if (!text) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'text' wajib diisi."
+            });
+        }
+
+        try {
+            const result = await textToSpeech(text, lang || 'id', speaker || 'female');
+            
+            if (result.success) {
+                return res.json({
+                    status: true,
+                    creator: "aerixxx",
+                    result: result
+                });
+            }
+            
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Gagal mengkonversi teks ke suara"
+            });
+        }
+    });
+};

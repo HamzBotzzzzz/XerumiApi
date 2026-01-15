@@ -1,0 +1,92 @@
+const axios = require('axios');
+const cheerio = require('cheerio');
+
+async function tafsirMimpi(query) {
+    return new Promise((resolve, reject) => {
+        const queryy = query.replace(/ /g, '+');
+        
+        axios.get('https://www.primbon.com/tafsir_mimpi.php?mimpi=' + queryy + '&submit=+Submit%21+')
+            .then(({ data }) => {
+                const $ = cheerio.load(data);
+                const content = $('#body').html();
+                
+                if (!content || content.includes('Tidak ditemukan') || content.includes('hasil tidak ditemukan')) {
+                    return resolve({
+                        success: false,
+                        message: "Tafsir mimpi tidak ditemukan",
+                        query: query
+                    });
+                }
+                
+                const lines = $('#body').text().split('\n').map(line => line.trim()).filter(line => line.length > 0);
+                
+                let resultText = '';
+                let isContent = false;
+                
+                for (let line of lines) {
+                    if (line.includes('Tafsir') && line.includes('Mimpi')) {
+                        isContent = true;
+                        resultText += line + '\n\n';
+                    } else if (isContent && line.includes('Kembali ke')) {
+                        break;
+                    } else if (isContent) {
+                        resultText += line + '\n';
+                    }
+                }
+                
+                if (resultText.trim() === '') {
+                    const firstP = $('#body').find('p').first().text().trim();
+                    const allText = $('#body').text().trim();
+                    const cleanedText = allText.split('Kembali ke')[0].trim();
+                    resultText = cleanedText || firstP;
+                }
+                
+                resolve({
+                    success: true,
+                    result: resultText.trim(),
+                    query: query,
+                    timestamp: new Date().toISOString()
+                });
+            })
+            .catch(reject);
+    });
+}
+
+module.exports = function(app) {
+    app.get("/primbon/tafsirmimpi", async (req, res) => {
+        const { mimpi } = req.query;
+        
+        if (!mimpi) {
+            return res.status(400).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Parameter 'mimpi' wajib diisi."
+            });
+        }
+
+        try {
+            const result = await tafsirMimpi(mimpi);
+            
+            if (result.success) {
+                return res.json({
+                    status: true,
+                    creator: "aerixxx",
+                    result: result.result
+                });
+            } else {
+                return res.json({
+                    status: false,
+                    creator: "aerixxx",
+                    message: result.message
+                });
+            }
+            
+        } catch (error) {
+            return res.status(500).json({
+                status: false,
+                creator: "aerixxx",
+                message: "Gagal mencari tafsir mimpi"
+            });
+        }
+    });
+};
