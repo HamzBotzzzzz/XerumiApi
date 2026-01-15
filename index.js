@@ -65,6 +65,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname, 'api-page'), { index: 'index.html' }));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 app.use('/fitur', express.static(path.join(__dirname, 'fitur')));
+app.use('/docs', express.static(path.join(__dirname, 'api-page'), { index: 'docs.html' }));
 
 let totalRoutes = 0;
 const apiBaseDir = path.join(__dirname, './src/api');
